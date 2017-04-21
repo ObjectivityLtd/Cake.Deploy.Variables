@@ -17,6 +17,8 @@ init:
       }
 
 environment:
+  GithubAuthToken:
+    secure: PkFAZB6f1lwOR9i3Mn9mR+kQBszikFVxmrhtOGK7p/xKlVF8o/htJc9LSQDSi3bN
 
 install:
 - ps: Install-PackageProvider -Name NuGet -MinimumVersion '2.8.5.201' -Force -Verbose
