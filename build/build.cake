@@ -46,7 +46,7 @@ Task("BuildSolution")
 
     NuGetRestore(solution);
 
-    var buildOutputDir = "\"" + MakeAbsolute(Directory(outputDir)).FullPath + "\"/dlls";
+    var buildOutputDir = "\"" + MakeAbsolute(Directory(outputDir)).FullPath + "/dlls\"";
 
     Information(buildOutputDir);
 
@@ -55,13 +55,36 @@ Task("BuildSolution")
                 .SetConfiguration("Release"));
 });
 
+Task("NuGet")
+    .Description("Create nuget package")
+    .Does(()=>
+{
+    var packagePath = outputDir + "\\nuget";
+
+    if(!DirectoryExists(packagePath))
+    {
+        CreateDirectory(packagePath);
+    }
+
+    var nuspecFile = sourceDir + "\\Cake.Deploy.Variables.nuspec";
+
+    var nuGetPackSettings   = new NuGetPackSettings {
+        BasePath        = outputDir + "\\dlls",
+        OutputDirectory = packagePath
+    };
+
+    NuGetPack(nuspecFile, nuGetPackSettings);
+});
+
 ///////////////////////////////////////////////////////////////////////////////
 // TARGETS
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("Default")
     .Description("This is the default task which will be ran if no specific target is passed in.")
-    .IsDependentOn("BuildSolution");
+    .IsDependentOn("BuildSolution")
+    .IsDependentOn("NuGet");
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXECUTION
