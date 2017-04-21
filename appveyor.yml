@@ -31,3 +31,13 @@ artifacts:
   - path: bin
     name: Cake.Deploy.Variables
     type: zip
+
+deploy:
+  - provider: GitHub
+    auth_token: $(GithubAuthToken)
+    artifact: /.*\.zip/
+    draft: false
+    prerelease: false
+    on:
+      branch: master
+      appveyor_repo_tag: true
