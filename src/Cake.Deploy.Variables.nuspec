@@ -16,5 +16,8 @@
   </metadata>
   <files>
     <file src="Cake.Deploy.Variables.dll" />
+    <file src="Cake.Deploy.Variables.xml" />
+    <file src="Cake.Core.dll" />
+    <file src="Cake.Core.xml" />
   </files>
 </package>
