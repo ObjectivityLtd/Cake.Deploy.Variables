@@ -69,7 +69,7 @@ Task("NuGet")
     var nuspecFile = sourceDir + "\\Cake.Deploy.Variables.nuspec";
 
     var nuGetPackSettings   = new NuGetPackSettings {
-        BasePath        = outputDir + "\\dlls",
+        BasePath        = outputDir,
         OutputDirectory = packagePath
     };
 

@@ -17,6 +17,8 @@ init:
       }
 
 environment:
+  NugetApiKey:
+    secure: DIE2y66RzXWvp2Q0wIOLlBTjxILBGeHyyg3pjwWjdVrggzuj9BuMWCdfHFmt9nt2
   GithubAuthToken:
     secure: PkFAZB6f1lwOR9i3Mn9mR+kQBszikFVxmrhtOGK7p/xKlVF8o/htJc9LSQDSi3bN
 
@@ -28,16 +30,18 @@ build_script:
   - ps: ./build.ps1
   
 artifacts:
-  - path: bin
+  - path: bin\*.nupkg
     name: Cake.Deploy.Variables
-    type: zip
 
 deploy:
   - provider: GitHub
     auth_token: $(GithubAuthToken)
-    artifact: /.*\.zip/
+    artifact: Cake.Deploy.Variables
     draft: false
     prerelease: false
     on:
       branch: master
       appveyor_repo_tag: true
+- provider: NuGet
+    api_key: $(NugetApiKey)
+    artifact: Cake.Deploy.Variables
