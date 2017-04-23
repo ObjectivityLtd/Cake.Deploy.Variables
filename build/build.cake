@@ -26,6 +26,10 @@ Setup(() =>
         Information("Output directory does not exist.");
         CreateDirectory(outputDir);
     }
+    else
+    {
+        CleanDirectory(outputDir);
+    }
 });
 
 Teardown(() =>
@@ -59,7 +63,7 @@ Task("NuGet")
     .Description("Create nuget package")
     .Does(()=>
 {
-    var packagePath = outputDir + "\\nuget";
+    var packagePath = outputDir;
 
     if(!DirectoryExists(packagePath))
     {
@@ -69,7 +73,7 @@ Task("NuGet")
     var nuspecFile = sourceDir + "\\Cake.Deploy.Variables.nuspec";
 
     var nuGetPackSettings   = new NuGetPackSettings {
-        BasePath        = outputDir,
+        BasePath        = outputDir + "\\dlls",
         OutputDirectory = packagePath
     };
 
