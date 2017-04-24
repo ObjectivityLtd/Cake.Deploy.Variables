@@ -12,7 +12,7 @@
 
         public string Name { get; }
 
-        public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
+        public VariableCollection Variables { get; } = new VariableCollection();
 
         public Environment AddVariable(string name, string value)
         {
@@ -26,12 +26,34 @@
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (this.Variables.ContainsKey(name))
+            if (this.Variables.Exists(name))
             {
                 throw new InvalidOperationException($"Duplicat. Variable can be added only once. {name}");
             }
 
             this.Variables.Add(name, value);
+
+            return this;
+        }
+
+        public Environment AddVariable(string name, Func<VariableCollection, string> expression)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException(nameof(name));
+            }
+
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (this.Variables.Exists(name))
+            {
+                throw new InvalidOperationException($"Duplicat. Variable can be added only once. {name}");
+            }
+
+            this.Variables.Add(name, expression);
 
             return this;
         }
@@ -45,8 +67,15 @@
 
             foreach (var variable in variables)
             {
-                this.AddVariable(variable.Key, variable.Value);
+                this.Variables.Add(variable.Key, variable.Value);
             }
+
+            return this;
+        }
+
+        public Environment IsBasedOn(Environment baseEnvironment)
+        {
+            this.Variables.BaseCollection = baseEnvironment.Variables;
 
             return this;
         }

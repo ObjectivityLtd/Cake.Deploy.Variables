@@ -25,5 +25,17 @@ namespace Cake.Deploy.Variables
 
             return environments[name];
         }
+
+        public static Environment Environment(this ICakeContext ctx)
+        {
+            var environmentVariableName = "env";
+
+            if (ctx.Environment.GetEnvironmentVariables().ContainsKey(environmentVariableName))
+            {
+                throw new InvalidOperationException("Can not use DeploymentVariables. Environment variable \"env\" not defined.");
+            }
+
+            return environments[(ctx.Environment.GetEnvironmentVariable("env"))];
+        }
     }
 }
