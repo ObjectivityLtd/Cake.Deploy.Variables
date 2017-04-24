@@ -48,10 +48,9 @@ namespace Cake.Deploy.Variables.Test
                 .AddVariable("var2", "default2");
 
             var env = result.Environment("dev")
-                .IsBasedOn(baseEnv)
+                .IsBasedOn("default")
                 .AddVariable("var2", "differentValue");
-
-
+            
             //assert
             Assert.Equal("default1", env.Variables["var1"]);
             Assert.Equal("differentValue", env.Variables["var2"]);

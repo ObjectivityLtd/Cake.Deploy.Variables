@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Cake.Deploy.Variables
 {
     using System;
@@ -5,8 +7,8 @@ namespace Cake.Deploy.Variables
     using Core;
     using Core.Annotations;
 
-    [CakeAliasCategory("VariableManager")]
-    public static class VariableManager
+    [CakeAliasCategory("EnvironmentManager")]
+    public static class EnvironmentManager
     {
         private static readonly Dictionary<string, Environment> environments = new Dictionary<string, Environment>();
 
@@ -26,6 +28,7 @@ namespace Cake.Deploy.Variables
             return environments[name];
         }
 
+        [CakeMethodAlias]
         public static Environment Environment(this ICakeContext ctx)
         {
             var environmentVariableName = "env";
@@ -36,6 +39,26 @@ namespace Cake.Deploy.Variables
             }
 
             return environments[(ctx.Environment.GetEnvironmentVariable("env"))];
+        }
+
+        public static bool Exists(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return environments.ContainsKey(name);
+        }
+
+        public static Environment GetEnvironment(string name)
+        {
+            if (!environments.ContainsKey(name))
+            {
+                throw new InvalidOperationException($"Environment with the given name does not exist: {name}");
+            }
+
+            return environments[name];
         }
     }
 }

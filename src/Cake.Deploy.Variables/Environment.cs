@@ -73,9 +73,14 @@
             return this;
         }
 
-        public Environment IsBasedOn(Environment baseEnvironment)
+        public Environment IsBasedOn(string baseEnvironment)
         {
-            this.Variables.BaseCollection = baseEnvironment.Variables;
+            if (!EnvironmentManager.Exists(baseEnvironment))
+            {
+                throw new InvalidOperationException($"Environment with the given name is not defined: {baseEnvironment}");
+            }
+
+            this.Variables.BaseCollection = EnvironmentManager.GetEnvironment(baseEnvironment).Variables;
 
             return this;
         }
