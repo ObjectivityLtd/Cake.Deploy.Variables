@@ -31,14 +31,14 @@ namespace Cake.Deploy.Variables
         [CakeMethodAlias]
         public static VariableCollection ReleaseVariable(this ICakeContext ctx)
         {
-            var environmentVariableName = "env";
+            const string argumentName = "env";
 
-            if (!ctx.Environment.GetEnvironmentVariables().ContainsKey(environmentVariableName))
+            if (!ctx.Arguments.HasArgument(argumentName))
             {
-                throw new InvalidOperationException("Environment variable \"env\" not defined.");
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
             }
 
-            return environments[(ctx.Environment.GetEnvironmentVariable("env"))];
+            return environments[ctx.Arguments.GetArgument(argumentName)];
         }
 
         public static bool Exists(string name)

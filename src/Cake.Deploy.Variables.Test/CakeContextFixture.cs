@@ -32,11 +32,11 @@ namespace Cake.Deploy.Variables.Test
             Registry = Substitute.For<IRegistry>();
             Tools = Substitute.For<IToolLocator>();
 
-            this.Environment.GetEnvironmentVariables()
-                .Returns(new Dictionary<string, string>() { { "env", currentEnvironment } });
-
-            this.Environment.GetEnvironmentVariable("env")
+            this.Arguments.GetArgument("env")
                 .Returns(currentEnvironment);
+                
+            this.Arguments.HasArgument("env")
+                .Returns(true);
 
             Context = new CakeContext(FileSystem, Environment, Globber,
                 Log, Arguments, ProcessRunner, Registry, Tools);
