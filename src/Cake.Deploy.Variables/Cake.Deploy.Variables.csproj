@@ -46,8 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Environment.cs" />
-    <Compile Include="EnvironmentManager.cs" />
+    <Compile Include="VariableManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VariableCollection.cs" />
   </ItemGroup>

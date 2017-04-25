@@ -7,7 +7,7 @@ namespace Cake.Deploy.Variables
     {
         private readonly Dictionary<string, Func<VariableCollection, string>> variables = new Dictionary<string, Func<VariableCollection, string>>();
 
-        public VariableCollection BaseCollection { get; set; }
+        private VariableCollection BaseCollection { get; set; }
 
         public string this[string name]
         {
@@ -29,14 +29,63 @@ namespace Cake.Deploy.Variables
             }
         }
 
-        public void Add(string name, string value)
+        public VariableCollection AddVariable(string name, string value)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException(nameof(name));
+            }
+
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (this.variables.ContainsKey(name))
+            {
+                throw new InvalidOperationException($"Duplicat. Variable can be added only once. {name}");
+            }
+
             this.variables.Add(name, x => value);
+
+            return this;
         }
 
-        public void Add(string name, Func<VariableCollection, string> expression)
+        public VariableCollection AddVariable(string name, Func<VariableCollection, string> expression)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException(nameof(name));
+            }
+
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (this.variables.ContainsKey(name))
+            {
+                throw new InvalidOperationException($"Duplicat. Variable can be added only once. {name}");
+            }
+
             this.variables.Add(name, expression);
+
+            return this;
+        }
+
+        public VariableCollection AddVariables(Dictionary<string, string> variables)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            foreach (var variable in variables)
+            {
+                this.variables.Add(variable.Key, x => variable.Value);
+            }
+
+            return this;
         }
 
         public bool Exists(string name)
@@ -44,6 +93,18 @@ namespace Cake.Deploy.Variables
             var keyInBaseCollection = this.BaseCollection?.Exists("name");
 
             return this.variables.ContainsKey(name) || (keyInBaseCollection == true);
+        }
+
+        public VariableCollection IsBasedOn(string baseEnvironment)
+        {
+            if (!VariableManager.Exists(baseEnvironment))
+            {
+                throw new InvalidOperationException($"ReleaseEnvironment with the given name is not defined: {baseEnvironment}");
+            }
+
+            this.BaseCollection = VariableManager.GetEnvironment(baseEnvironment);
+
+            return this;
         }
     }
 }

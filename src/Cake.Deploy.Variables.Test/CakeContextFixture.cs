@@ -1,4 +1,6 @@
-﻿using Cake.Core;
+﻿using System;
+using System.Collections.Generic;
+using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
 using Cake.Core.Tooling;
@@ -6,7 +8,7 @@ using NSubstitute;
 
 namespace Cake.Deploy.Variables.Test
 {
-    public class CakeContextFixture
+    public class CakeContextFixture : IDisposable
     {
         public IFileSystem FileSystem { get; set; }
         public ICakeEnvironment Environment { get; set; }
@@ -17,7 +19,9 @@ namespace Cake.Deploy.Variables.Test
         public IRegistry Registry { get; set; }
         public IToolLocator Tools { get; set; }
 
-        public CakeContextFixture()
+        public ICakeContext Context { get; set; }
+
+        public CakeContextFixture(string currentEnvironment)
         {
             FileSystem = Substitute.For<IFileSystem>();
             Environment = Substitute.For<ICakeEnvironment>();
@@ -27,13 +31,25 @@ namespace Cake.Deploy.Variables.Test
             ProcessRunner = Substitute.For<IProcessRunner>();
             Registry = Substitute.For<IRegistry>();
             Tools = Substitute.For<IToolLocator>();
-        }
 
-        public CakeContext CreateContext()
-        {
-            return new CakeContext(FileSystem, Environment, Globber,
+            this.Environment.GetEnvironmentVariables()
+                .Returns(new Dictionary<string, string>() { { "env", currentEnvironment } });
+
+            this.Environment.GetEnvironmentVariable("env")
+                .Returns(currentEnvironment);
+
+            Context = new CakeContext(FileSystem, Environment, Globber,
                 Log, Arguments, ProcessRunner, Registry, Tools);
         }
 
+        public ICakeContext GetContext()
+        {
+            return Context;
+        }
+
+        public void Dispose()
+        {
+            VariableManager.Clear();
+        }
     }
 }

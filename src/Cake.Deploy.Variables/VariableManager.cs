@@ -7,35 +7,35 @@ namespace Cake.Deploy.Variables
     using Core;
     using Core.Annotations;
 
-    [CakeAliasCategory("EnvironmentManager")]
-    public static class EnvironmentManager
+    [CakeAliasCategory("VariableManager")]
+    public static class VariableManager
     {
-        private static readonly Dictionary<string, Environment> environments = new Dictionary<string, Environment>();
+        private static readonly Dictionary<string, VariableCollection> environments = new Dictionary<string, VariableCollection>();
 
         [CakeMethodAlias]
-        public static Environment Environment(this ICakeContext ctx, string name)
+        public static VariableCollection ReleaseEnvironment(this ICakeContext ctx, string name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (String.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
             if (!environments.ContainsKey(name))
             {
-                environments.Add(name, new Environment(name));
+                environments.Add(name, new VariableCollection());
             }
 
             return environments[name];
         }
 
         [CakeMethodAlias]
-        public static Environment Environment(this ICakeContext ctx)
+        public static VariableCollection ReleaseVariable(this ICakeContext ctx)
         {
             var environmentVariableName = "env";
 
-            if (ctx.Environment.GetEnvironmentVariables().ContainsKey(environmentVariableName))
+            if (!ctx.Environment.GetEnvironmentVariables().ContainsKey(environmentVariableName))
             {
-                throw new InvalidOperationException("Can not use DeploymentVariables. Environment variable \"env\" not defined.");
+                throw new InvalidOperationException("Environment variable \"env\" not defined.");
             }
 
             return environments[(ctx.Environment.GetEnvironmentVariable("env"))];
@@ -43,7 +43,7 @@ namespace Cake.Deploy.Variables
 
         public static bool Exists(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (String.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentNullException(nameof(name));
             }
@@ -51,14 +51,19 @@ namespace Cake.Deploy.Variables
             return environments.ContainsKey(name);
         }
 
-        public static Environment GetEnvironment(string name)
+        public static VariableCollection GetEnvironment(string name)
         {
             if (!environments.ContainsKey(name))
             {
-                throw new InvalidOperationException($"Environment with the given name does not exist: {name}");
+                throw new InvalidOperationException($"ReleaseEnvironment with the given name does not exist: {name}");
             }
 
             return environments[name];
+        }
+
+        public static void Clear()
+        {
+            environments.Clear();
         }
     }
 }

@@ -1,3 +1,5 @@
+#tool "nuget:?package=xunit.runner.console"
+
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,8 +57,16 @@ Task("BuildSolution")
     Information(buildOutputDir);
 
     MSBuild(solution, settings => 
-        settings.WithProperty("OutputPath", buildOutputDir)
-                .SetConfiguration("Release"));
+        settings.SetConfiguration("Release"));
+});
+
+Task("TestRun")
+    .Description("Run Unit Tests")
+    .Does(() =>
+{
+    var testAssemblies = GetFiles("..\\src\\**\\bin\\Release\\*.Test.dll");
+
+    XUnit2(testAssemblies);
 });
 
 Task("NuGet")
@@ -73,7 +83,7 @@ Task("NuGet")
     var nuspecFile = sourceDir + "\\Cake.Deploy.Variables.nuspec";
 
     var nuGetPackSettings   = new NuGetPackSettings {
-        BasePath        = outputDir + "\\dlls",
+        BasePath        = sourceDir + "\\Cake.Deploy.Variables\\bin\\Release\\",
         OutputDirectory = packagePath
     };
 
@@ -87,6 +97,7 @@ Task("NuGet")
 Task("Default")
     .Description("This is the default task which will be ran if no specific target is passed in.")
     .IsDependentOn("BuildSolution")
+    .IsDependentOn("TestRun")
     .IsDependentOn("NuGet");
 
 

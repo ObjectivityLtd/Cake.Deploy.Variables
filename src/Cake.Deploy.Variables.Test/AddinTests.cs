@@ -1,59 +1,150 @@
-﻿using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using Cake.Core;
+using Xunit;
 
 namespace Cake.Deploy.Variables.Test
 {
-    public class AddinTests
+    public class AddinTests : IDisposable
     {
         [Fact]
-        public void ShouldReturnCorrectVariableValue_String()
+        public void When_VariableDefinedInCurrentEnvironment_Should_ReturnItsValue()
         {
             // arrange
-            var fixture = new CakeContextFixture();
-            //act
-            var result = fixture.CreateContext();
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
 
-            var env = result.Environment("dev")
-                .AddVariable("test", "testResult");
+            //act
+            var context = fixture.GetContext();
+
+            var variableName = "simpleVariable";
+            var variableValue = "simpleVariableValue";
+
+            context.ReleaseEnvironment(currentEnvironment)
+                .AddVariable(variableName, variableValue);
             
             //assert
-            Assert.Equal("testResult", env.Variables["test"]);
+            Assert.Equal(variableValue, context.ReleaseVariable()[variableName]);
         }
 
         [Fact]
-        public void ShouldReturnCorrectVariableValue_Func()
+        public void When_VariableReferencesOtherVariableInCurrentEnvironment_Should_ReturnOtherVariableValue()
         {
             // arrange
-            var fixture = new CakeContextFixture();
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
             //act
-            var result = fixture.CreateContext();
+            var context = fixture.GetContext();
 
-            var env = result.Environment("dev")
-                .AddVariable("base", x => "default value")
-                .AddVariable("child", x => "Not a " + x["base"]);
+            var baseVariable = "referencedVariable";
+            var baseVariableValue = "defaultValue";
+
+            var childVariable = "functionVariable";
+
+            context.ReleaseEnvironment(currentEnvironment)
+                .AddVariable(baseVariable, baseVariableValue)
+                .AddVariable(childVariable, x => x[baseVariable]);
 
             //assert
-            Assert.Equal("Not a default value", env.Variables["child"]);
+            Assert.Equal(baseVariableValue, context.ReleaseVariable()[childVariable]);
         }
 
         [Fact]
-        public void ShouldReturnCorrectVariableValue_default()
+        public void When_VariableDefinedOnlyInBaseEnvironment_Should_ReturnVariableValueFromTheBaseEnvironment()
         {
-            // arrange
-            var fixture = new CakeContextFixture();
+            //arrange
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
+
             //act
-            var result = fixture.CreateContext();
+            var context = fixture.GetContext();
 
-            var baseEnv = result.Environment("default")
-                .AddVariable("var1", "default1")
-                .AddVariable("var2", "default2");
+            var baseVariable = "baseVariable";
+            var baseVariableValue = "defaultValue";
 
-            var env = result.Environment("dev")
+            context.ReleaseEnvironment("default")
+                .AddVariable(baseVariable, baseVariableValue);
+
+            context.ReleaseEnvironment(currentEnvironment)
+                .IsBasedOn("default");
+
+            //assert
+            Assert.Equal(baseVariableValue, context.ReleaseVariable()[baseVariable]);
+        }
+
+        [Fact]
+        public void When_VariableDefinedInCurrentEnvironmentButNotInBaseEnv_Should_ReturnVariableValue()
+        {
+            //arrange
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
+
+            //act
+            var context = fixture.GetContext();
+
+            context.ReleaseEnvironment("default");
+
+            var variableName = "simpleVariable";
+            var variableValue = "simpleValue";
+
+            context.ReleaseEnvironment(currentEnvironment)
                 .IsBasedOn("default")
-                .AddVariable("var2", "differentValue");
-            
+                .AddVariable(variableName, variableValue);
+
             //assert
-            Assert.Equal("default1", env.Variables["var1"]);
-            Assert.Equal("differentValue", env.Variables["var2"]);
+            Assert.Equal(variableValue, context.ReleaseVariable()[variableName]);
+        }
+
+        [Fact]
+        public void When_VariableDefinedInCurrentEnvironmentReferencesVariableInBaseEnv_Should_ReturnBaseVariableValue()
+        {
+            //arrange
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
+
+            //act
+            var context = fixture.GetContext();
+
+            var baseVariable = "referencedVariable";
+            var baseVariableValue = "defaultValue";
+
+            context.ReleaseEnvironment("default")
+                .AddVariable(baseVariable, baseVariableValue);
+
+            var currentEnvVariable = "childVariable";
+
+            context.ReleaseEnvironment(currentEnvironment)
+                .IsBasedOn("default")
+                .AddVariable(currentEnvVariable, x => x[baseVariable]);
+
+            //assert
+            Assert.Equal(baseVariableValue, context.ReleaseVariable()[currentEnvVariable]);
+        }
+
+        [Fact]
+        public void When_VariableNotDefined_Should_ThrowAnException()
+        {
+            //arrange
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
+
+            //act
+            var context = fixture.GetContext();
+
+            context.ReleaseEnvironment("default");
+
+            context.ReleaseEnvironment(currentEnvironment);
+
+            var variableName = "testVariable";
+
+            var exception = Record.Exception(() => context.ReleaseVariable()[variableName]);
+
+            Assert.IsType(typeof(KeyNotFoundException), exception);
+        }
+
+        public void Dispose()
+        {
+            VariableManager.Clear();
         }
     }
 }
