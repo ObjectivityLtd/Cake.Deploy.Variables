@@ -142,6 +142,69 @@ namespace Cake.Deploy.Variables.Test
             Assert.IsType(typeof(KeyNotFoundException), exception);
         }
 
+        [Fact]
+        public void
+            When_VariableDefinedInBaseEnvReferenceOtherVariableOverridenInCurrentEnvironment_Should_ReturnValueFromCurrentenvironment
+            ()
+        {
+            //arrange
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
+
+            //act
+            var context = fixture.GetContext();
+
+            var referencedVariableName = "envName";
+            var baseReferencedValue = "default";
+
+            var currentReferencedValue = "development";
+
+            var variableName = "webSiteName";
+
+            context.ReleaseEnvironment("default")
+                .AddVariable(referencedVariableName, baseReferencedValue)
+                .AddVariable(variableName, x => x[referencedVariableName]);
+
+            context.ReleaseEnvironment(currentEnvironment)
+                .IsBasedOn("default")
+                .AddVariable(referencedVariableName, currentReferencedValue);
+
+            //assert
+            Assert.Equal(currentReferencedValue, context.ReleaseVariable()[variableName]);
+        }
+
+        [Fact]
+        public void When_VariableDefinedInBaseEnvReferenceTwoVariables_Should_Return_ConcatOfBaseValueAndCurrentValue()
+        {
+            //arrange
+            var currentEnvironment = "dev";
+            var fixture = new CakeContextFixture(currentEnvironment);
+
+            //act
+            var context = fixture.GetContext();
+
+            var referencedVariableName1 = "var1";
+            var baseReferencedValue1 = "default1";
+            var referencedVariableName2 = "var2";
+            var baseReferencedValue2 = "default2";
+
+            var currentReferencedValue = "development";
+
+            var variableName = "webSiteName";
+
+            context.ReleaseEnvironment("default")
+                .AddVariable(referencedVariableName1, baseReferencedValue1)
+                .AddVariable(referencedVariableName2, baseReferencedValue2)
+                .AddVariable(variableName, x => x[referencedVariableName1] + " " + x[referencedVariableName2]);
+
+            context.ReleaseEnvironment(currentEnvironment)
+                .IsBasedOn("default")
+                .AddVariable(referencedVariableName1, currentReferencedValue);
+
+            //assert
+            Assert.Equal(currentReferencedValue + " " + baseReferencedValue2, context.ReleaseVariable()[variableName]);
+        }
+
         public void Dispose()
         {
             VariableManager.Clear();

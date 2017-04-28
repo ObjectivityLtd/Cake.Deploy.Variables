@@ -41,6 +41,19 @@ namespace Cake.Deploy.Variables
             return environments[ctx.Arguments.GetArgument(argumentName)];
         }
 
+        [CakeMethodAlias]
+        public static string ReleaseVariable(this ICakeContext ctx, string variableName)
+        {
+            const string argumentName = "env";
+
+            if (!ctx.Arguments.HasArgument(argumentName))
+            {
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
+            }
+
+            return environments[ctx.Arguments.GetArgument(argumentName)][variableName];
+        }
+
         public static bool Exists(string name)
         {
             if (String.IsNullOrWhiteSpace(name))

@@ -9,23 +9,38 @@ namespace Cake.Deploy.Variables
 
         private VariableCollection BaseCollection { get; set; }
 
+        private Func<VariableCollection, string> GetVariableExpression(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (this.variables.ContainsKey(name))
+            {
+                return this.variables[name];
+            }
+
+            if (this.BaseCollection != null)
+            {
+                return this.BaseCollection.GetVariableExpression(name);
+            }
+
+            throw new KeyNotFoundException($"Key with the given name not found: {name}");
+        }
+
         public string this[string name]
         {
             get
             {
-                if (this.variables.ContainsKey(name))
+                if (string.IsNullOrWhiteSpace(name))
                 {
-                    return  this.variables[name](this);
+                    throw new ArgumentNullException(nameof(name));
                 }
 
-                var keyInBaseCollection = this.BaseCollection?.Exists(name);
+                var expression = this.GetVariableExpression(name);
 
-                if (keyInBaseCollection == true)
-                {
-                    return this.BaseCollection[name];
-                }
-
-                throw new KeyNotFoundException($"The given key was not present in the dictionary: {name}");
+                return expression(this);
             }
         }
 
@@ -105,6 +120,21 @@ namespace Cake.Deploy.Variables
             this.BaseCollection = VariableManager.GetEnvironment(baseEnvironment);
 
             return this;
+        }
+
+        public VariableCollection SetVariable(string name, string value)
+        {
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if(this.variables.ContainsKey(name))
+            {
+                this.variables.Remove(name);
+            }
+
+            return this.AddVariable(name, value);
         }
     }
 }
