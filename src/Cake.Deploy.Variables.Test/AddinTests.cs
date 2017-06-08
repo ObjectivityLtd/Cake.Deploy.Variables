@@ -17,7 +17,7 @@ namespace Cake.Deploy.Variables.Test
             //act
             var context = fixture.GetContext();
 
-            var variableName = "simpleVariable";
+            var variableName = "simpleVariable"; 
             var variableValue = "simpleVariableValue";
 
             context.ReleaseEnvironment(currentEnvironment)
