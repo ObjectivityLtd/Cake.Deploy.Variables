@@ -58,3 +58,29 @@ ReleaseEnvironment("dev")
     .AddVariable("UserName", "devuser@somedomain.com")
     .AddVariable("Pass", "************");
 ```
+
+A variable value can be set with value from an argument
+
+```cake
+ReleaseEnvironment("dev").AddVariable("Password", x => Argument<string>("Password", ""));
+```
+In this case Cake should be run as below:
+
+```powershell
+.\build.ps1 -ScriptArgs '-env="dev"', '-Password="yourPassword"'
+```
+
+# How to use release variables
+If you want to use release variable simply call ReleaseVariable method with a variable name
+
+```cake
+var login = ReleaseVariable("UserName");
+```
+
+**Please remember that in order to use release varibles an "env" argument has to be set.**
+
+In some cases you might want to update a variable. To do so call:
+
+```cake
+ReleaseVariable().SetVariable(variableName, variableValue).
+```
