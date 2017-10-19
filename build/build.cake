@@ -57,7 +57,7 @@ Task("BuildSolution")
     Information(buildOutputDir);
 
     MSBuild(solution, settings => 
-        settings.SetConfiguration("Release"));
+        settings.SetConfiguration(configuration));
 });
 
 Task("TestRun")
@@ -75,16 +75,11 @@ Task("NuGet")
 {
     var packagePath = outputDir;
 
-    if(!DirectoryExists(packagePath))
-    {
-        CreateDirectory(packagePath);
-    }
-
-    var nuspecFile = sourceDir + "\\Cake.Deploy.Variables.nuspec";
+    var nuspecFile = sourceDir + "\\Cake.Deploy.Variables\\Cake.Deploy.Variables.csproj";
 
     var nuGetPackSettings   = new NuGetPackSettings {
-        BasePath        = sourceDir + "\\Cake.Deploy.Variables\\bin\\Release\\",
-        OutputDirectory = packagePath
+        OutputDirectory = packagePath,
+        Properties = new Dictionary<string,string>{ {"Configuration", configuration} }
     };
 
     NuGetPack(nuspecFile, nuGetPackSettings);
@@ -99,7 +94,6 @@ Task("Default")
     .IsDependentOn("BuildSolution")
     .IsDependentOn("TestRun")
     .IsDependentOn("NuGet");
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXECUTION
