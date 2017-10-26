@@ -35,7 +35,7 @@ namespace Cake.Deploy.Variables
 
             if (!ctx.Arguments.HasArgument(argumentName))
             {
-                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
             }
 
             return environments[ctx.Arguments.GetArgument(argumentName)];
@@ -44,14 +44,20 @@ namespace Cake.Deploy.Variables
         [CakeMethodAlias]
         public static string ReleaseVariable(this ICakeContext ctx, string variableName)
         {
-            const string argumentName = "env";
+            const string envArgumentName = "env";
 
-            if (!ctx.Arguments.HasArgument(argumentName))
+            if (!ctx.Arguments.HasArgument(envArgumentName))
             {
-                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
+                throw new InvalidOperationException($"Environment not defined (\"{envArgumentName}\" argument not present).");
             }
 
-            return environments[ctx.Arguments.GetArgument(argumentName)][variableName];
+            var envirnoment = ctx.Arguments.GetArgument(envArgumentName);
+
+            if (!environments.ContainsKey(envirnoment))
+            {
+                throw new InvalidOperationException($"Variables: envirnoment \"{envirnoment}\" is not defined or needs to be loaded.");
+            }
+            return environments[envirnoment][variableName];
         }
 
         public static bool Exists(string name)
