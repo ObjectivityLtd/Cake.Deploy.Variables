@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cake.Core;
 using Xunit;
 
 namespace Cake.Deploy.Variables.Test
@@ -144,7 +143,7 @@ namespace Cake.Deploy.Variables.Test
 
         [Fact]
         public void
-            When_VariableDefinedInBaseEnvReferenceOtherVariableOverridenInCurrentEnvironment_Should_ReturnValueFromCurrentenvironment
+            When_VariableDefinedInBaseEnvReferenceOtherVariableOverridenInCurrentEnvironment_Should_ReturnValueFromCurrentEnvironment
             ()
         {
             //arrange
