@@ -35,7 +35,7 @@ namespace Cake.Deploy.Variables
 
             if (!ctx.Arguments.HasArgument(argumentName))
             {
-                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
             }
 
             return environments[ctx.Arguments.GetArgument(argumentName)];
@@ -48,10 +48,25 @@ namespace Cake.Deploy.Variables
 
             if (!ctx.Arguments.HasArgument(argumentName))
             {
-                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
             }
 
             return environments[ctx.Arguments.GetArgument(argumentName)][variableName];
+        }
+
+        [CakeMethodAlias]
+        public static T ReleaseVariable<T>(this ICakeContext ctx, string variableName) where T : IConvertible
+        {
+            const string argumentName = "env";
+
+            if (!ctx.Arguments.HasArgument(argumentName))
+            {
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
+            }
+
+            var value = environments[ctx.Arguments.GetArgument(argumentName)][variableName];
+
+            return (T) Convert.ChangeType(value, typeof(T));
         }
 
         public static bool Exists(string name)
