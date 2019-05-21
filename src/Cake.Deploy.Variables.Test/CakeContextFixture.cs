@@ -1,5 +1,6 @@
 ﻿using System;
 using Cake.Core;
+using Cake.Core.Configuration;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
 using Cake.Core.Tooling;
@@ -19,6 +20,7 @@ namespace Cake.Deploy.Variables.Test
         public IToolLocator Tools { get; set; }
         public ICakeDataService DataService { get; set; }
         public ICakeContext Context { get; set; }
+        public ICakeConfiguration Configuration { get; set; }
 
         public CakeContextFixture(string currentEnvironment)
         {
@@ -31,6 +33,7 @@ namespace Cake.Deploy.Variables.Test
             Registry = Substitute.For<IRegistry>();
             Tools = Substitute.For<IToolLocator>();
             DataService = Substitute.For<ICakeDataService>();
+            Configuration = Substitute.For<ICakeConfiguration>();
 
             this.Arguments.GetArgument("env")
                 .Returns(currentEnvironment);
@@ -39,7 +42,7 @@ namespace Cake.Deploy.Variables.Test
                 .Returns(true);
 
             Context = new CakeContext(FileSystem, Environment, Globber,
-                Log, Arguments, ProcessRunner, Registry, Tools, DataService);
+                Log, Arguments, ProcessRunner, Registry, Tools, DataService, Configuration);
         }
 
         public ICakeContext GetContext()
