@@ -56,8 +56,12 @@ Task("BuildSolution")
 
     Information(buildOutputDir);
 
-    MSBuild(solution, settings => 
-        settings.SetConfiguration(configuration));
+     var settings = new DotNetCoreBuildSettings
+     {
+         Configuration = configuration
+     };
+
+    DotNetCoreBuild(solution, settings);
 });
 
 Task("TestRun")
@@ -77,12 +81,12 @@ Task("NuGet")
 
     var nuspecFile = sourceDir + "\\Cake.Deploy.Variables\\Cake.Deploy.Variables.csproj";
 
-    var nuGetPackSettings   = new NuGetPackSettings {
+    var nuGetPackSettings = new DotNetCorePackSettings  {
         OutputDirectory = packagePath,
-        Properties = new Dictionary<string,string>{ {"Configuration", configuration} }
+        Configuration = configuration
     };
 
-    NuGetPack(nuspecFile, nuGetPackSettings);
+    DotNetCorePack(nuspecFile, nuGetPackSettings);
 });
 
 ///////////////////////////////////////////////////////////////////////////////

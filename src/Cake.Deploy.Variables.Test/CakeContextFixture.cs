@@ -41,8 +41,7 @@ namespace Cake.Deploy.Variables.Test
             this.Arguments.HasArgument("env")
                 .Returns(true);
 
-            Context = new CakeContext(FileSystem, Environment, Globber,
-                Log, Arguments, ProcessRunner, Registry, Tools, DataService, Configuration);
+            Context = new CakeContext(FileSystem, Environment, Globber, Log, Arguments, ProcessRunner, Registry, Tools, DataService, Configuration);
         }
 
         public ICakeContext GetContext()
