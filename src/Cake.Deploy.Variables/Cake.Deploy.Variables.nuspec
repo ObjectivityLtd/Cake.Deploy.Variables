@@ -12,5 +12,6 @@
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>Cake Deploy Variables Deployment</tags>
+    <iconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</iconUrl>
   </metadata>
 </package>
