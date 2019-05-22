@@ -57,14 +57,7 @@ namespace Cake.Deploy.Variables
         [CakeMethodAlias]
         public static T ReleaseVariable<T>(this ICakeContext ctx, string variableName) where T : IConvertible
         {
-            const string argumentName = "env";
-
-            if (!ctx.Arguments.HasArgument(argumentName))
-            {
-                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
-            }
-
-            var value = environments[ctx.Arguments.GetArgument(argumentName)][variableName];
+            var value = ctx.ReleaseVariable(variableName);
 
             return (T) Convert.ChangeType(value, typeof(T));
         }
