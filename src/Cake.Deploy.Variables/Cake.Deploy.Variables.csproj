@@ -12,7 +12,7 @@
     <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Cake.Core" Version="0.33.0" />
+    <PackageReference Include="Cake.Core" Version="0.33.0" PrivateAssets="All"/>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
