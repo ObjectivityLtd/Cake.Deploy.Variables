@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Cake.Deploy.Variables
@@ -59,7 +60,12 @@ namespace Cake.Deploy.Variables
         {
             var value = ctx.ReleaseVariable(variableName);
 
-            return (T) Convert.ChangeType(value, typeof(T));
+            if (typeof(T) == typeof(decimal) && value.Contains(","))
+            {
+                value = value.Replace(",", ".");
+            }
+
+            return (T) Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
         }
 
         public static bool Exists(string name)
