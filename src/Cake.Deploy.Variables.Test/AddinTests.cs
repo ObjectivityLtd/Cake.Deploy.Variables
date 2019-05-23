@@ -204,46 +204,6 @@ namespace Cake.Deploy.Variables.Test
             Assert.Equal(currentReferencedValue + " " + baseReferencedValue2, context.ReleaseVariable()[variableName]);
         }
 
-        [Fact]
-        public void When_VariablesValuesAreConvertible_Should_ReturnTheirsValuesByGenericTypes()
-        {
-            // arrange
-            var currentEnvironment = "dev";
-            var fixture = new CakeContextFixture(currentEnvironment);
-            var context = fixture.GetContext();
-
-            const string boolValueName = "BoolValueName";
-            const string decimalWithPointValueName = "DecimalWithPointValueName";
-            const string decimalWithCommaValueName = "DecimalWithCommaValueName";
-            const string dateValueName = "DateValueName";
-            const string intValueName = "IntValueName";
-            const string stringValueName = "StringValueName";
-
-            context.ReleaseEnvironment(currentEnvironment)
-                .AddVariable(boolValueName, "true")
-                .AddVariable(decimalWithPointValueName, "2.54")
-                .AddVariable(decimalWithCommaValueName, "2,54")
-                .AddVariable(dateValueName, "2019.05.21")
-                .AddVariable(intValueName, "111")
-                .AddVariable(stringValueName, "someText");
-
-            //act
-            bool boolValue = context.ReleaseVariable<bool>(boolValueName);
-            decimal decimalWithPointValue = context.ReleaseVariable<decimal>(decimalWithPointValueName);
-            decimal decimalWithCommaValue = context.ReleaseVariable<decimal>(decimalWithCommaValueName);
-            DateTime dateValue = context.ReleaseVariable<DateTime>(dateValueName);
-            int intValue = context.ReleaseVariable<int>(intValueName);
-            string stringValue = context.ReleaseVariable<string>(stringValueName);
-
-            //assert
-            Assert.Equal(true, boolValue);
-            Assert.Equal(2.54m, decimalWithPointValue);
-            Assert.Equal(2.54m, decimalWithCommaValue);
-            Assert.Equal(new DateTime(2019, 5, 21), dateValue);
-            Assert.Equal(111, intValue);
-            Assert.Equal("someText", stringValue);
-        }
-
         public void Dispose()
         {
             VariableManager.Clear();
