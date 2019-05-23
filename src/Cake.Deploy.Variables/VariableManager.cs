@@ -66,6 +66,17 @@ namespace Cake.Deploy.Variables
                 value = value.Replace(",", ".");
             }
 
+            if (typeof(Enum).IsAssignableFrom(typeof(T)))
+            {
+                var enumValue = (T)Enum.Parse(typeof(T), value);
+                if (Enum.IsDefined(typeof(T), enumValue))
+                {
+                    return enumValue;
+                }
+
+                throw new NullReferenceException($"Requested value '{enumValue}' was not found.");
+            }
+
             return (T) Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
         }
 

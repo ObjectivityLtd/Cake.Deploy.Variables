@@ -87,6 +87,7 @@
     <Compile Include="ReleaseVariableByGenericTypeTests\Char.cs" />
     <Compile Include="ReleaseVariableByGenericTypeTests\DateTime.cs" />
     <Compile Include="ReleaseVariableByGenericTypeTests\Double.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Enum.cs" />
     <Compile Include="ReleaseVariableByGenericTypeTests\Int16.cs" />
     <Compile Include="ReleaseVariableByGenericTypeTests\Int32.cs" />
     <Compile Include="ReleaseVariableByGenericTypeTests\Int64.cs" />
