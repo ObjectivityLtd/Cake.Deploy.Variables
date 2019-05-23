@@ -80,17 +80,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddinTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Boolean.cs" />
     <Compile Include="CakeContextFixture.cs" />
-    <Compile Include="ReleaseVariableByGenericTypeTests.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Byte.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Char.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\DateTime.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Double.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Int16.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Int32.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Int64.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\ReleaseVariableByGenericTypeTests.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\SByte.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Decimal.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\Single.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\String.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\UInt16.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\UInt32.cs" />
+    <Compile Include="ReleaseVariableByGenericTypeTests\UInt64.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Cake.Deploy.Variables\Cake.Deploy.Variables.csproj">
       <Project>{e99af260-218a-462d-b00c-c46d07f483e8}</Project>
