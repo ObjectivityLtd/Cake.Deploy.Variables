@@ -60,7 +60,8 @@ namespace Cake.Deploy.Variables
         {
             var value = ctx.ReleaseVariable(variableName);
 
-            if (typeof(T) == typeof(decimal) && value.Contains(","))
+            var isDecimalType = typeof(T) == typeof(decimal) || typeof(T) == typeof(float) || typeof(T) == typeof(double);
+            if (isDecimalType && value.Contains(","))
             {
                 value = value.Replace(",", ".");
             }
