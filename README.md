@@ -77,6 +77,16 @@ If you want to use release variable simply call ReleaseVariable method with a va
 var login = ReleaseVariable("UserName");
 ```
 
+There is also an option to release variable with a specified type, e.g.:
+```cake
+bool boolValue = context.ReleaseVariable<bool>("BoolValue");
+DateTime dateTimeValue = context.ReleaseVariable<DateTime>("DateTimeValue");
+decimal decimalValue = context.ReleaseVariable<decimal>("DecimalValue");
+TestEnum enumValue = context.ReleaseVariable<TestEnum>("TestEnumValue");
+```
+Any type that implements IConvertible is supported.  
+For this reason, requested value must be stored in the appropriate format.
+
 **Please remember that in order to use release varibles an "env" argument has to be set.**
 
 In some cases you might want to update a variable. To do so call:
