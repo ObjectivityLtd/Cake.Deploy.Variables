@@ -6,6 +6,7 @@
 
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
+var version = Argument<string>("FileVersion", "1.0.0");
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
@@ -45,6 +46,7 @@ Teardown(context =>
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("BuildSolution")
+    .IsDependentOn("Version")
     .Description("Builds Cake.Deploy.Variables solution")
     .Does(() =>
 {
@@ -63,6 +65,17 @@ Task("BuildSolution")
 
     DotNetCoreBuild(solution, settings);
 });
+
+Task("Version")
+    .Description("Set assembly Version")
+    .Does(() => {
+        var propsFile = sourceDir + "/Directory.build.props";
+        var readedVersion = XmlPeek(propsFile, "//Version");
+        var currentVersion = new Version(readedVersion);
+
+        XmlPoke(propsFile, "//Version", version);
+        
+    });
 
 Task("TestRun")
     .Description("Run Unit Tests")

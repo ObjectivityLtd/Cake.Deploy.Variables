@@ -2,15 +2,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>1.0.0</Version>
     <Company>ObjectivityLtd</Company>
     <authors>ObjectivityLtd</authors>
     <owners>ObjectivityLtd</owners>
     <Product>Cake.Deploy.Variables</Product>
     <Description>Cake addin for the deployment variables management.</Description>
     <Copyright>Objectivity Bespoke Software Specialists, MIT license</Copyright>
-    <AssemblyVersion>0.2.1.0</AssemblyVersion>
-    <FileVersion>0.2.1.0</FileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)'==''">$(Version)</AssemblyVersion>
+    <FileVersion Condition="'$(AssemblyVersion)'==''">$(Version)</FileVersion>
     <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
   </PropertyGroup>
   <ItemGroup>
