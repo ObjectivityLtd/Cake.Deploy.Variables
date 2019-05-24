@@ -1,9 +1,8 @@
-using System.Runtime.CompilerServices;
-
 namespace Cake.Deploy.Variables
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using Core;
     using Core.Annotations;
 
@@ -35,7 +34,7 @@ namespace Cake.Deploy.Variables
 
             if (!ctx.Arguments.HasArgument(argumentName))
             {
-                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
             }
 
             return environments[ctx.Arguments.GetArgument(argumentName)];
@@ -48,10 +47,35 @@ namespace Cake.Deploy.Variables
 
             if (!ctx.Arguments.HasArgument(argumentName))
             {
-                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" agrument not present).");
+                throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
             }
 
             return environments[ctx.Arguments.GetArgument(argumentName)][variableName];
+        }
+
+        [CakeMethodAlias]
+        public static T ReleaseVariable<T>(this ICakeContext ctx, string variableName) where T : IConvertible
+        {
+            var value = ctx.ReleaseVariable(variableName);
+
+            var isDecimalType = typeof(T) == typeof(decimal) || typeof(T) == typeof(float) || typeof(T) == typeof(double);
+            if (isDecimalType && value.Contains(","))
+            {
+                value = value.Replace(",", ".");
+            }
+
+            if (typeof(Enum).IsAssignableFrom(typeof(T)))
+            {
+                var enumValue = (T)Enum.Parse(typeof(T), value);
+                if (Enum.IsDefined(typeof(T), enumValue))
+                {
+                    return enumValue;
+                }
+
+                throw new InvalidOperationException($"Requested value '{enumValue}' was not found.");
+            }
+
+            return (T) Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
         }
 
         public static bool Exists(string name)
@@ -66,7 +90,7 @@ namespace Cake.Deploy.Variables
 
         public static VariableCollection GetEnvironment(string name)
         {
-            if (!environments.ContainsKey(name))
+            if (!Exists(name))
             {
                 throw new InvalidOperationException($"ReleaseEnvironment with the given name does not exist: {name}");
             }
@@ -77,6 +101,16 @@ namespace Cake.Deploy.Variables
         public static void Clear()
         {
             environments.Clear();
+        }
+
+        public static void Clear(string name)
+        {
+            if (!Exists(name))
+            {
+                throw new InvalidOperationException($"ReleaseEnvironment with the given name does not exist: {name}");
+            }
+
+            environments.Remove(name);
         }
     }
 }
