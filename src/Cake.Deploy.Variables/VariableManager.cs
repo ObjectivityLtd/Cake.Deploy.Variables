@@ -72,7 +72,7 @@ namespace Cake.Deploy.Variables
                     return enumValue;
                 }
 
-                throw new NullReferenceException($"Requested value '{enumValue}' was not found.");
+                throw new InvalidOperationException($"Requested value '{enumValue}' was not found.");
             }
 
             return (T) Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
