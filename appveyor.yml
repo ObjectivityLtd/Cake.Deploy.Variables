@@ -27,7 +27,7 @@ install:
 
 build_script:
   - cd build
-  - ps: ./build.ps1
+  - ps: ./build.ps1 -ScriptArgs '--FileVersion="$env:APPVEYOR_BUILD_VERSION"' 
   
 artifacts:
   - path: bin\*.nupkg
