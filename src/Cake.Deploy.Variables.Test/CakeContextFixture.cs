@@ -1,14 +1,15 @@
-﻿using System;
-using Cake.Core;
-using Cake.Core.Diagnostics;
-using Cake.Core.IO;
-using Cake.Core.Tooling;
-using NSubstitute;
-
-namespace Cake.Deploy.Variables.Test
+﻿namespace Cake.Deploy.Variables.Test
 {
+    using System;
+    using Cake.Core;
+    using Cake.Core.Diagnostics;
+    using Cake.Core.IO;
+    using Cake.Core.Tooling;
+    using NSubstitute;
+
     public class CakeContextFixture : IDisposable
     {
+        public string CurrentEnvironment { get; }
         public IFileSystem FileSystem { get; set; }
         public ICakeEnvironment Environment { get; set; }
         public IGlobber Globber { get; set; }
@@ -22,6 +23,7 @@ namespace Cake.Deploy.Variables.Test
 
         public CakeContextFixture(string currentEnvironment)
         {
+            CurrentEnvironment = currentEnvironment;
             FileSystem = Substitute.For<IFileSystem>();
             Environment = Substitute.For<ICakeEnvironment>();
             Globber = Substitute.For<IGlobber>();
@@ -49,7 +51,7 @@ namespace Cake.Deploy.Variables.Test
 
         public void Dispose()
         {
-            VariableManager.Clear();
+            VariableManager.Clear(CurrentEnvironment);
         }
     }
 }
