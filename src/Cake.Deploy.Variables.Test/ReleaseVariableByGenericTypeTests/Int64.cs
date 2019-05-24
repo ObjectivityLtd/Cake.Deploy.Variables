@@ -1,7 +1,7 @@
-﻿using Xunit;
-
-namespace Cake.Deploy.Variables.Test.ReleaseVariableByGenericTypeTests
+﻿namespace Cake.Deploy.Variables.Test.ReleaseVariableByGenericTypeTests
 {
+    using Xunit;
+
     public class Int64 : ReleaseVariableByGenericTypeTests<long>
     {
         [Theory]

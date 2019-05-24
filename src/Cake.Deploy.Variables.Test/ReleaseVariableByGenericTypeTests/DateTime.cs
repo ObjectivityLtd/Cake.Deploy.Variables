@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Xunit;
-
-namespace Cake.Deploy.Variables.Test.ReleaseVariableByGenericTypeTests
+﻿namespace Cake.Deploy.Variables.Test.ReleaseVariableByGenericTypeTests
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using Xunit;
+
     public class DateTime : ReleaseVariableByGenericTypeTests<System.DateTime>
     {
         [Theory]

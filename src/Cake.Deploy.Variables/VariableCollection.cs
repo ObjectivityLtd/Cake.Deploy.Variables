@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Cake.Deploy.Variables
+﻿namespace Cake.Deploy.Variables
 {
+    using System;
+    using System.Collections.Generic;
+
     public class VariableCollection
     {
         private readonly Dictionary<string, Func<VariableCollection, string>> variables = new Dictionary<string, Func<VariableCollection, string>>();

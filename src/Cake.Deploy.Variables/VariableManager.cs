@@ -1,10 +1,8 @@
-using System.Globalization;
-using System.Runtime.CompilerServices;
-
 namespace Cake.Deploy.Variables
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using Core;
     using Core.Annotations;
 
