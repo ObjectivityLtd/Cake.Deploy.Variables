@@ -92,7 +92,7 @@ namespace Cake.Deploy.Variables
 
         public static VariableCollection GetEnvironment(string name)
         {
-            if (!environments.ContainsKey(name))
+            if (!Exists(name))
             {
                 throw new InvalidOperationException($"ReleaseEnvironment with the given name does not exist: {name}");
             }
@@ -103,6 +103,16 @@ namespace Cake.Deploy.Variables
         public static void Clear()
         {
             environments.Clear();
+        }
+
+        public static void Clear(string name)
+        {
+            if (!Exists(name))
+            {
+                throw new InvalidOperationException($"ReleaseEnvironment with the given name does not exist: {name}");
+            }
+
+            environments.Remove(name);
         }
     }
 }
