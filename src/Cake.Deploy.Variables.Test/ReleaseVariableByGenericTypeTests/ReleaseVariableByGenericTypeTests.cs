@@ -1,47 +1,46 @@
-﻿using System;
-using FluentAssertions;
-
-namespace Cake.Deploy.Variables.Test.ReleaseVariableByGenericTypeTests
+﻿namespace Cake.Deploy.Variables.Test.ReleaseVariableByGenericTypeTests
 {
-    public abstract class ReleaseVariableByGenericTypeTests<T> : IDisposable where T : IConvertible
+    using System;
+    using FluentAssertions;
+
+    public abstract class ReleaseVariableByGenericTypeTests<T> where T : IConvertible
     {
         public virtual void AssertSuccess(string variableValue, T expectedValue)
         {
             // arrange
-            const string currentEnvironment = "dev";
-            var context = new CakeContextFixture(currentEnvironment).GetContext();
+            string currentEnvironment = Guid.NewGuid().ToString("N");
+            using (var fixture = new CakeContextFixture(currentEnvironment))
+            {
+                string variableName = Guid.NewGuid().ToString("N");
+                var context = fixture.GetContext();
+                context.ReleaseEnvironment(currentEnvironment)
+                    .AddVariable(variableName, variableValue);
 
-            const string variableName = "SomeSimpleValue";
-            context.ReleaseEnvironment(currentEnvironment)
-                .AddVariable(variableName, variableValue);
+                // act
+                var value = fixture.Context.ReleaseVariable<T>(variableName);
 
-            // act
-            var value = context.ReleaseVariable<T>(variableName);
-
-            // assert
-            value.Should().Be(expectedValue);
+                // assert
+                value.Should().Be(expectedValue);
+            }
         }
 
         public virtual void AssertFailure(string variableValue, string expectedErrorMessage)
         {
             // arrange
-            const string currentEnvironment = "dev";
-            var context = new CakeContextFixture(currentEnvironment).GetContext();
+            string currentEnvironment = Guid.NewGuid().ToString("N");
+            using (var fixture = new CakeContextFixture(currentEnvironment))
+            {
+                string variableName = Guid.NewGuid().ToString("N");
+                var context = fixture.GetContext();
+                context.ReleaseEnvironment(currentEnvironment)
+                    .AddVariable(variableName, variableValue);
 
-            const string variableName = "SomeSimpleValue";
-            context.ReleaseEnvironment(currentEnvironment)
-                .AddVariable(variableName, variableValue);
+                // act
+                Action invalidAction = () => fixture.Context.ReleaseVariable<T>(variableName);
 
-            // act
-            Action invalidAction = () => context.ReleaseVariable<T>(variableName);
-
-            // assert
-            invalidAction.Should().Throw<Exception>().WithMessage(expectedErrorMessage);
-        }
-
-        public void Dispose()
-        {
-            VariableManager.Clear();
+                // assert
+                invalidAction.Should().Throw<Exception>().WithMessage(expectedErrorMessage);
+            }
         }
     }
 }
