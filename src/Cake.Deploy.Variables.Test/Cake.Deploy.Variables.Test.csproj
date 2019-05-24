@@ -105,7 +105,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Cake.Deploy.Variables\Cake.Deploy.Variables.csproj">
       <Project>{e99af260-218a-462d-b00c-c46d07f483e8}</Project>
