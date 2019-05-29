@@ -43,6 +43,7 @@ build_script:
 test_script:
 - cmd: >-
     dotnet test ./src/%namespace%.Test  /p:CollectCoverage=true /p:CoverletOutputFormat=%cc% /p:Exclude="[xunit*]*" /p:CoverletOutput=%appveyor_build_folder%\%cc%\%namespace%.xml
+
     codecov -f %appveyor_build_folder%\%cc%\%namespace%.xml --flag unittests
 artifacts:
   - path: '**\*.nupkg'
