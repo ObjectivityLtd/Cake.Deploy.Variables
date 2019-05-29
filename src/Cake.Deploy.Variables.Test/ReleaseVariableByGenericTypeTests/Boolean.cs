@@ -8,12 +8,12 @@
         [InlineData("true", true)]
         [InlineData("false", false)]
         public override void AssertSuccess(string variableValue, bool expectedValue)
-            => base.AssertSuccess(variableValue, expectedValue);
+            => this.AssertSuccess(variableValue, expectedValue);
 
         [Theory]
         [InlineData("23423", "String was not recognized as a valid Boolean.")]
         [InlineData("T", "String was not recognized as a valid Boolean.")]
         public override void AssertFailure(string variableValue, string expectedErrorMessage)
-            => base.AssertFailure(variableValue, expectedErrorMessage);
+            => this.AssertFailure(variableValue, expectedErrorMessage);
     }
 }

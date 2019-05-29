@@ -12,12 +12,12 @@
         [InlineData("123,567", 123.567)]
         [InlineData("123.567", 123.567)]
         public override void AssertSuccess(string variableValue, decimal expectedValue)
-            => base.AssertSuccess(variableValue, expectedValue);
+            => this.AssertSuccess(variableValue, expectedValue);
 
         [Theory]
         [InlineData("-14.14,56", "Input string was not in a correct format.")]
         [InlineData("!@#$", "Input string was not in a correct format.")]
         public override void AssertFailure(string variableValue, string expectedErrorMessage)
-            => base.AssertFailure(variableValue, expectedErrorMessage);
+            => this.AssertFailure(variableValue, expectedErrorMessage);
     }
 }

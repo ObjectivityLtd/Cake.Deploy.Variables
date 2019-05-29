@@ -37,12 +37,12 @@
         [Theory]
         [MemberData(nameof(DateTimeSuccessTestData))]
         public override void AssertSuccess(string variableValue, System.DateTime expectedValue)
-            => base.AssertSuccess(variableValue, expectedValue);
+            => this.AssertSuccess(variableValue, expectedValue);
 
         [Theory]
         [MemberData(nameof(DateTimeFailureTestData))]
         public override void AssertFailure(string variableValue, string expectedErrorMessage)
-            => base.AssertFailure(variableValue, expectedErrorMessage);
+            => this.AssertFailure(variableValue, expectedErrorMessage);
 
         private static object[] CreateFailureTestDataItem(string value) => new[] { value, $"String '{value}' was not recognized as a valid DateTime." };
     }
