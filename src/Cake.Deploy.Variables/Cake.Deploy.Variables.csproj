@@ -2,16 +2,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Company>ObjectivityLtd</Company>
-    <authors>ObjectivityLtd</authors>
-    <owners>ObjectivityLtd</owners>
-    <Product>Cake.Deploy.Variables</Product>
-    <Description>Cake addin for the deployment variables management.</Description>
-    <Copyright>Objectivity Bespoke Software Specialists, MIT license</Copyright>
-    <AssemblyVersion Condition="'$(AssemblyVersion)'==''">$(Version)</AssemblyVersion>
-    <FileVersion Condition="'$(AssemblyVersion)'==''">$(Version)</FileVersion>
-    <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
+    <IncludeSymbols>True</IncludeSymbols>
+    <IncludeSource>True</IncludeSource>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageProjectUrl>https://github.com/ObjectivityLtd/Cake.Deploy.Variables</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
+    <PackageTags>cake variables deploy release-variables</PackageTags>
+    <PackageReleaseNotes>See https://github.com/ObjectivityLtd/Cake.Deploy.Variables/releases</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/ObjectivityLtd/Cake.Deploy.Variables.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version Condition="'$(Version)'==''">1.0.0</Version>
+    <AssemblyVersion Condition="'$(AssemblyVersion)'==''">$(Version)</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)'==''">$(Version)</FileVersion>
+    <Company>Objectivity Ltd</Company>
+    <Authors Condition="'$(Authors)'==''">$(Company)</Authors>
+    <Copyright Condition="'$(Copyright)'==''">Copyright (c) $(Company)</Copyright>
+    <AssemblyTitle Condition="'$(AssemblyTitle)'==''">$(AssemblyName)</AssemblyTitle>
+    <Product Condition="'$(Product)'==''">$(AssemblyName)</Product>
+    <Description Condition="'$(Description)'==''">Cake addin for the deployment variables management.</Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Cake.Core" Version="0.33.0" PrivateAssets="All" />
   </ItemGroup>
