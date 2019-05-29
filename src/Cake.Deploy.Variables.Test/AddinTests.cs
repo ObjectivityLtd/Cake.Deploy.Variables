@@ -129,7 +129,7 @@
 
             var exception = Record.Exception(() => context.ReleaseVariable()[variableName]);
 
-            Assert.IsType(typeof(KeyNotFoundException), exception);
+            Assert.IsType<KeyNotFoundException>(exception);
         }
 
         [Fact]

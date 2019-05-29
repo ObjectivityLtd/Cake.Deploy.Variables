@@ -42,14 +42,19 @@
 
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { "23.05.2019", ErrorMessage };
-            yield return new object[] { "23 05 2019", ErrorMessage };
-            yield return new object[] { "ABCSDSDSDSD#RE#", "The string was not recognized as a valid DateTime. There is an unknown word starting at index 0." };
-            yield return new object[] { "23052019", ErrorMessage };
-            yield return new object[] { "05232019", ErrorMessage };
-            yield return new object[] { "Friday", ErrorMessage };
+            yield return CreateItem("23.05.2019");
+            yield return CreateItem("23 05 2019");
+            yield return new object[] { "ABCSDSDSDSD#RE#", "The string 'ABCSDSDSDSD#RE#' was not recognized as a valid DateTime. There is an unknown word starting at index '0'." };
+            yield return CreateItem("23052019");
+            yield return CreateItem("05232019");
+            yield return CreateItem("Friday");
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private object[] CreateItem(string value)
+        {
+            return new[] { value, $"String '{value}' was not recognized as a valid DateTime." };
+        }
     }
 }
