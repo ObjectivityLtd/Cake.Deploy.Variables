@@ -1,27 +1,25 @@
 ﻿namespace Cake.Deploy.Variables.Test.ReleaseVariableByGenericTypeTests
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using Xunit;
 
     public class DateTime : ReleaseVariableByGenericTypeTests<System.DateTime>
     {
-        public static IEnumerable<object[]> DateTimeSuccessTestData
+        public static IEnumerable<object[]> DateTimeSuccessTestData => new List<object[]>
         {
-            get
-            {
-                yield return new object[] { "2019.05.23", new System.DateTime(2019, 5, 23) };
-                yield return new object[] { "2019/05/23", new System.DateTime(2019, 5, 23) };
-                yield return new object[] { "2019-05-23", new System.DateTime(2019, 5, 23) };
-                yield return new object[] { "2019 05 23", new System.DateTime(2019, 5, 23) };
-                yield return new object[] { "Friday, 29 May 2015", new System.DateTime(2015, 5, 29) };
-                yield return new object[] { "Friday, 29 May 2015 05:50", new System.DateTime(2015, 5, 29, 5, 50, 0) };
-                yield return new object[] { "Friday, 29 May 2015 05:50 AM", new System.DateTime(2015, 5, 29, 5, 50, 0) };
-                yield return new object[] { "05/29/2015 05:50", new System.DateTime(2015, 5, 29, 5, 50, 0) };
-                yield return new object[] { "2015-05-16T05:50:06", new System.DateTime(2015, 5, 16, 5, 50, 6) };
-                yield return new object[] { "2015 May", new System.DateTime(2015, 5, 1) };
-            }
-        }
+            new object[] { "2019.05.23", new System.DateTime(2019, 5, 23) },
+            new object[] { "2019/05/23", new System.DateTime(2019, 5, 23) },
+            new object[] { "2019-05-23", new System.DateTime(2019, 5, 23) },
+            new object[] { "2019 05 23", new System.DateTime(2019, 5, 23) },
+            new object[] { "Friday, 29 May 2015", new System.DateTime(2015, 5, 29) },
+            new object[] { "Friday, 29 May 2015 05:50", new System.DateTime(2015, 5, 29, 5, 50, 0) },
+            new object[] { "Friday, 29 May 2015 05:50 AM", new System.DateTime(2015, 5, 29, 5, 50, 0) },
+            new object[] { "05/29/2015 05:50", new System.DateTime(2015, 5, 29, 5, 50, 0) },
+            new object[] { "2015-05-16T05:50:06", new System.DateTime(2015, 5, 16, 5, 50, 6) },
+            new object[] { "2015 May", new System.DateTime(2015, 5, 1) },
+        };
 
         public static IEnumerable<object[]> DateTimeFailureTestData
         {
