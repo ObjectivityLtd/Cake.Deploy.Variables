@@ -9,26 +9,6 @@
 
         private VariableCollection BaseCollection { get; set; }
 
-        private Func<VariableCollection, string> GetVariableExpression(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            if (this.variables.ContainsKey(name))
-            {
-                return this.variables[name];
-            }
-
-            if (this.BaseCollection != null)
-            {
-                return this.BaseCollection.GetVariableExpression(name);
-            }
-
-            throw new KeyNotFoundException($"Key with the given name not found: {name}");
-        }
-
         public string this[string name]
         {
             get
@@ -124,17 +104,37 @@
 
         public VariableCollection SetVariable(string name, string value)
         {
-            if(string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if(this.variables.ContainsKey(name))
+            if (this.variables.ContainsKey(name))
             {
                 this.variables.Remove(name);
             }
 
             return this.AddVariable(name, value);
+        }
+
+        private Func<VariableCollection, string> GetVariableExpression(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (this.variables.ContainsKey(name))
+            {
+                return this.variables[name];
+            }
+
+            if (this.BaseCollection != null)
+            {
+                return this.BaseCollection.GetVariableExpression(name);
+            }
+
+            throw new KeyNotFoundException($"Key with the given name not found: {name}");
         }
     }
 }

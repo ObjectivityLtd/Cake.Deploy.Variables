@@ -3,7 +3,8 @@
     using System;
     using FluentAssertions;
 
-    public abstract class ReleaseVariableByGenericTypeTests<T> where T : IConvertible
+    public abstract class ReleaseVariableByGenericTypeTests<T>
+        where T : IConvertible
     {
         public virtual void AssertSuccess(string variableValue, T expectedValue)
         {

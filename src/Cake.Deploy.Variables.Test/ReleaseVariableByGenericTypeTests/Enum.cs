@@ -6,7 +6,7 @@
     {
         FirstValue,
         SecondValue,
-        ThirdValue
+        ThirdValue,
     }
 
     public class Enum : ReleaseVariableByGenericTypeTests<TestEnum>
