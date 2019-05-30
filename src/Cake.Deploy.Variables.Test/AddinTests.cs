@@ -2,32 +2,33 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using Xunit;
 
     public class AddinTests : IDisposable
     {
-        private readonly string CurrentEnvironment = Guid.NewGuid().ToString("N");
+        private readonly string currentEnvironment = Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
         private readonly CakeContextFixture fixture;
 
         public AddinTests()
         {
-            fixture = new CakeContextFixture(CurrentEnvironment);
+            this.fixture = new CakeContextFixture(this.currentEnvironment);
         }
 
         [Fact]
         public void When_VariableDefinedInCurrentEnvironment_Should_ReturnItsValue()
         {
             // arrange
-            var context = fixture.GetContext();
+            var context = this.fixture.Context;
 
             var variableName = "simpleVariable";
             var variableValue = "simpleVariableValue";
 
-            //act
-            context.ReleaseEnvironment(CurrentEnvironment)
+            // act
+            context.ReleaseEnvironment(this.currentEnvironment)
                 .AddVariable(variableName, variableValue);
-            
-            //assert
+
+            // assert
             Assert.Equal(variableValue, context.ReleaseVariable()[variableName]);
         }
 
@@ -35,110 +36,108 @@
         public void When_VariableReferencesOtherVariableInCurrentEnvironment_Should_ReturnOtherVariableValue()
         {
             // arrange
-            var context = fixture.GetContext();
+            var context = this.fixture.Context;
 
             var baseVariable = "referencedVariable";
             var baseVariableValue = "defaultValue";
 
             var childVariable = "functionVariable";
 
-            //act
-            context.ReleaseEnvironment(CurrentEnvironment)
+            // act
+            context.ReleaseEnvironment(this.currentEnvironment)
                 .AddVariable(baseVariable, baseVariableValue)
                 .AddVariable(childVariable, x => x[baseVariable]);
 
-            //assert
+            // assert
             Assert.Equal(baseVariableValue, context.ReleaseVariable()[childVariable]);
         }
 
         [Fact]
         public void When_VariableDefinedOnlyInBaseEnvironment_Should_ReturnVariableValueFromTheBaseEnvironment()
         {
-            //arrange
-            var context = fixture.GetContext();
+            // arrange
+            var context = this.fixture.Context;
 
             var baseVariable = "baseVariable";
             var baseVariableValue = "defaultValue";
 
-            //act
+            // act
             context.ReleaseEnvironment("default")
                 .AddVariable(baseVariable, baseVariableValue);
 
-            context.ReleaseEnvironment(CurrentEnvironment)
+            context.ReleaseEnvironment(this.currentEnvironment)
                 .IsBasedOn("default");
 
-            //assert
+            // assert
             Assert.Equal(baseVariableValue, context.ReleaseVariable()[baseVariable]);
         }
 
         [Fact]
         public void When_VariableDefinedInCurrentEnvironmentButNotInBaseEnv_Should_ReturnVariableValue()
         {
-            //arrange
-            var context = fixture.GetContext();
+            // arrange
+            var context = this.fixture.Context;
 
             var variableName = "simpleVariable";
             var variableValue = "simpleValue";
 
-            //act
+            // act
             context.ReleaseEnvironment("default");
 
-            context.ReleaseEnvironment(CurrentEnvironment)
+            context.ReleaseEnvironment(this.currentEnvironment)
                 .IsBasedOn("default")
                 .AddVariable(variableName, variableValue);
 
-            //assert
+            // assert
             Assert.Equal(variableValue, context.ReleaseVariable()[variableName]);
         }
 
         [Fact]
         public void When_VariableDefinedInCurrentEnvironmentReferencesVariableInBaseEnv_Should_ReturnBaseVariableValue()
         {
-            //arrange
-            var context = fixture.GetContext();
+            // arrange
+            var context = this.fixture.Context;
 
             var baseVariable = "referencedVariable";
             var baseVariableValue = "defaultValue";
 
             var currentEnvVariable = "childVariable";
 
-            //act
+            // act
             context.ReleaseEnvironment("default")
                 .AddVariable(baseVariable, baseVariableValue);
 
-            context.ReleaseEnvironment(CurrentEnvironment)
+            context.ReleaseEnvironment(this.currentEnvironment)
                 .IsBasedOn("default")
                 .AddVariable(currentEnvVariable, x => x[baseVariable]);
 
-            //assert
+            // assert
             Assert.Equal(baseVariableValue, context.ReleaseVariable()[currentEnvVariable]);
         }
 
         [Fact]
         public void When_VariableNotDefined_Should_ThrowAnException()
         {
-            //arrange
-            var context = fixture.GetContext();
+            // arrange
+            var context = this.fixture.Context;
 
             var variableName = "testVariable";
 
-            //act
+            // act
             context.ReleaseEnvironment("default");
 
-            context.ReleaseEnvironment(CurrentEnvironment);
+            context.ReleaseEnvironment(this.currentEnvironment);
 
             var exception = Record.Exception(() => context.ReleaseVariable()[variableName]);
 
-            Assert.IsType(typeof(KeyNotFoundException), exception);
+            Assert.IsType<KeyNotFoundException>(exception);
         }
 
         [Fact]
-        public void
-            When_VariableDefinedInBaseEnvReferenceOtherVariableOverridenInCurrentEnvironment_Should_ReturnValueFromCurrentEnvironment
-            ()
+        public void When_VariableDefinedInBaseEnvReferenceOtherVariableOverridenInCurrentEnvironment_Should_ReturnValueFromCurrentEnvironment()
         {
-            //arrange
-            var context = fixture.GetContext();
+            // arrange
+            var context = this.fixture.Context;
 
             var referencedVariableName = "envName";
             var baseReferencedValue = "default";
@@ -147,24 +146,24 @@
 
             var variableName = "webSiteName";
 
-            //act
+            // act
             context.ReleaseEnvironment("default")
                 .AddVariable(referencedVariableName, baseReferencedValue)
                 .AddVariable(variableName, x => x[referencedVariableName]);
 
-            context.ReleaseEnvironment(CurrentEnvironment)
+            context.ReleaseEnvironment(this.currentEnvironment)
                 .IsBasedOn("default")
                 .AddVariable(referencedVariableName, currentReferencedValue);
 
-            //assert
+            // assert
             Assert.Equal(currentReferencedValue, context.ReleaseVariable()[variableName]);
         }
 
         [Fact]
         public void When_VariableDefinedInBaseEnvReferenceTwoVariables_Should_Return_ConcatOfBaseValueAndCurrentValue()
         {
-            //arrange
-            var context = fixture.GetContext();
+            // arrange
+            var context = this.fixture.Context;
 
             var referencedVariableName1 = "var1";
             var baseReferencedValue1 = "default1";
@@ -175,23 +174,32 @@
 
             var variableName = "concatVariable";
 
-            //act
+            // act
             context.ReleaseEnvironment("default")
                 .AddVariable(referencedVariableName1, baseReferencedValue1)
                 .AddVariable(referencedVariableName2, baseReferencedValue2)
                 .AddVariable(variableName, x => x[referencedVariableName1] + " " + x[referencedVariableName2]);
 
-            context.ReleaseEnvironment(CurrentEnvironment)
+            context.ReleaseEnvironment(this.currentEnvironment)
                 .IsBasedOn("default")
                 .AddVariable(referencedVariableName1, currentReferencedValue);
 
-            //assert
+            // assert
             Assert.Equal(currentReferencedValue + " " + baseReferencedValue2, context.ReleaseVariable()[variableName]);
         }
 
         public void Dispose()
         {
-            fixture.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.fixture.Dispose();
+            }
         }
     }
 }

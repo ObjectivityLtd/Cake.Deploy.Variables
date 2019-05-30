@@ -2,32 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "This is an appropriate type name as it keeps collection of variables.")]
     public class VariableCollection
     {
         private readonly Dictionary<string, Func<VariableCollection, string>> variables = new Dictionary<string, Func<VariableCollection, string>>();
 
         private VariableCollection BaseCollection { get; set; }
-
-        private Func<VariableCollection, string> GetVariableExpression(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            if (this.variables.ContainsKey(name))
-            {
-                return this.variables[name];
-            }
-
-            if (this.BaseCollection != null)
-            {
-                return this.BaseCollection.GetVariableExpression(name);
-            }
-
-            throw new KeyNotFoundException($"Key with the given name not found: {name}");
-        }
 
         public string this[string name]
         {
@@ -48,7 +30,7 @@
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(nameof(name));
+                throw new ArgumentException("Variable name cannot be null or whitespace.", nameof(name));
             }
 
             if (value == null)
@@ -70,7 +52,7 @@
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(nameof(name));
+                throw new ArgumentException("Variable name cannot be null or whitespace.", nameof(name));
             }
 
             if (expression == null)
@@ -124,17 +106,37 @@
 
         public VariableCollection SetVariable(string name, string value)
         {
-            if(string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if(this.variables.ContainsKey(name))
+            if (this.variables.ContainsKey(name))
             {
                 this.variables.Remove(name);
             }
 
             return this.AddVariable(name, value);
+        }
+
+        private Func<VariableCollection, string> GetVariableExpression(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (this.variables.ContainsKey(name))
+            {
+                return this.variables[name];
+            }
+
+            if (this.BaseCollection != null)
+            {
+                return this.BaseCollection.GetVariableExpression(name);
+            }
+
+            throw new KeyNotFoundException($"Key with the given name not found: {name}");
         }
     }
 }

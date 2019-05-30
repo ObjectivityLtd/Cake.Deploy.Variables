@@ -1,48 +1,61 @@
+version: 0.0.{build}
+image: Visual Studio 2017
 skip_commits:
   files:
     - README.md
-
-image: WMF 5
-
+configuration: Release
 init:
-  # Set "build version number" to "short-commit-hash" or when tagged to "tag name"
-  - ps: >-
-      if ($env:APPVEYOR_REPO_TAG -eq "true")
-      {
-        Update-AppveyorBuild -Version "$env:APPVEYOR_REPO_TAG_NAME"
-      }
-      else
-      {
-        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
-      }
-
+- ps: >-
+    if ($env:APPVEYOR_REPO_TAG -eq "true")
+    {
+        Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.split("-")[0])"
+    }
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
 environment:
+  namespace: Cake.Deploy.Variables
+  cc: opencover
   NugetApiKey:
     secure: wz8VOuRxEgPd7evPVcWYTqpW/tqigqdZpS9Stmhb2K2bXkOAHm07on4Hmy11EysF
   GithubAuthToken:
     secure: PkFAZB6f1lwOR9i3Mn9mR+kQBszikFVxmrhtOGK7p/xKlVF8o/htJc9LSQDSi3bN
-
 install:
-- ps: Install-PackageProvider -Name NuGet -MinimumVersion '2.8.5.201' -Force -Verbose
-
+- ps: >-
+    choco install codecov
 build_script:
-  - cd build
-  - ps: ./build.ps1
-  
+- ps: >-
+    dotnet build ./src/$env:namespace.sln
+
+    if ($env:APPVEYOR_REPO_TAG -eq "true")
+    {
+        dotnet pack ./src/$env:namespace --no-build -p:PackageVersion=$env:APPVEYOR_REPO_TAG_NAME
+    }
+    else
+    {
+        dotnet pack ./src/$env:namespace --no-build -p:PackageVersion=$env:APPVEYOR_BUILD_VERSION
+    }
+test_script:
+- cmd: >-
+    dotnet test ./src/%namespace%.Test  /p:CollectCoverage=true /p:CoverletOutputFormat=%cc% /p:Exclude="[xunit*]*" /p:CoverletOutput=%appveyor_build_folder%\%cc%\%namespace%.xml
+
+    codecov -f %appveyor_build_folder%\%cc%\%namespace%.xml --flag unittests
 artifacts:
-  - path: bin\*.nupkg
-    name: Cake.Deploy.Variables
+  - path: '**\*.nupkg'
 
 deploy:
   - provider: GitHub
     auth_token: $(GithubAuthToken)
-    artifact: Cake.Deploy.Variables
     draft: false
     prerelease: false
     on:
       appveyor_repo_tag: true
   - provider: NuGet
     api_key: $(NugetApiKey)
-    artifact: Cake.Deploy.Variables
     on:
       appveyor_repo_tag: true

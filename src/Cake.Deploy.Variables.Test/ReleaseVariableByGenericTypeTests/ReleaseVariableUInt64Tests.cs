@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class UInt64 : ReleaseVariableByGenericTypeTests<ulong>
+    public class ReleaseVariableUInt64Tests : ReleaseVariableGenericBaseTests<ulong>
     {
         [Theory]
         [InlineData("18446744073709551615", 18446744073709551615)]

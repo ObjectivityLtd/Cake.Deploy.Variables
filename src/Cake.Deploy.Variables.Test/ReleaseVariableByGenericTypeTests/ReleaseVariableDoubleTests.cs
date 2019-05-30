@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class Single : ReleaseVariableByGenericTypeTests<float>
+    public class ReleaseVariableDoubleTests : ReleaseVariableGenericBaseTests<double>
     {
         [Theory]
         [InlineData("3.14", 3.14)]
@@ -11,7 +11,7 @@
         [InlineData("123456.789798", 123456.789798)]
         [InlineData("123,567", 123.567)]
         [InlineData("123.567", 123.567)]
-        public override void AssertSuccess(string variableValue, float expectedValue)
+        public override void AssertSuccess(string variableValue, double expectedValue)
             => base.AssertSuccess(variableValue, expectedValue);
 
         [Theory]

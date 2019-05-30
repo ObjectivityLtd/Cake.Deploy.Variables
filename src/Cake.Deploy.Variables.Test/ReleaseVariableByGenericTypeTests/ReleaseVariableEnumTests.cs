@@ -2,20 +2,20 @@
 {
     using Xunit;
 
-    public enum TestEnum
+    public enum EnumUnderTest
     {
         FirstValue,
         SecondValue,
-        ThirdValue
+        ThirdValue,
     }
 
-    public class Enum : ReleaseVariableByGenericTypeTests<TestEnum>
+    public class ReleaseVariableEnumTests : ReleaseVariableGenericBaseTests<EnumUnderTest>
     {
         [Theory]
-        [InlineData("0", TestEnum.FirstValue)]
-        [InlineData("2", TestEnum.ThirdValue)]
-        [InlineData("SecondValue", TestEnum.SecondValue)]
-        public override void AssertSuccess(string variableValue, TestEnum expectedValue)
+        [InlineData("0", EnumUnderTest.FirstValue)]
+        [InlineData("2", EnumUnderTest.ThirdValue)]
+        [InlineData("SecondValue", EnumUnderTest.SecondValue)]
+        public override void AssertSuccess(string variableValue, EnumUnderTest expectedValue)
             => base.AssertSuccess(variableValue, expectedValue);
 
         [Theory]

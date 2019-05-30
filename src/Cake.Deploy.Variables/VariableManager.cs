@@ -3,33 +3,38 @@ namespace Cake.Deploy.Variables
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using Core;
-    using Core.Annotations;
+    using Cake.Core;
+    using Cake.Core.Annotations;
 
     [CakeAliasCategory("VariableManager")]
     public static class VariableManager
     {
-        private static readonly Dictionary<string, VariableCollection> environments = new Dictionary<string, VariableCollection>();
+        private static readonly Dictionary<string, VariableCollection> Environments = new Dictionary<string, VariableCollection>();
 
         [CakeMethodAlias]
         public static VariableCollection ReleaseEnvironment(this ICakeContext ctx, string name)
         {
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (!environments.ContainsKey(name))
+            if (!Environments.ContainsKey(name))
             {
-                environments.Add(name, new VariableCollection());
+                Environments.Add(name, new VariableCollection());
             }
 
-            return environments[name];
+            return Environments[name];
         }
 
         [CakeMethodAlias]
         public static VariableCollection ReleaseVariable(this ICakeContext ctx)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException(nameof(ctx));
+            }
+
             const string argumentName = "env";
 
             if (!ctx.Arguments.HasArgument(argumentName))
@@ -37,12 +42,17 @@ namespace Cake.Deploy.Variables
                 throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
             }
 
-            return environments[ctx.Arguments.GetArgument(argumentName)];
+            return Environments[ctx.Arguments.GetArgument(argumentName)];
         }
 
         [CakeMethodAlias]
         public static string ReleaseVariable(this ICakeContext ctx, string variableName)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException(nameof(ctx));
+            }
+
             const string argumentName = "env";
 
             if (!ctx.Arguments.HasArgument(argumentName))
@@ -50,11 +60,12 @@ namespace Cake.Deploy.Variables
                 throw new InvalidOperationException($"Environment not defined (\"{argumentName}\" argument not present).");
             }
 
-            return environments[ctx.Arguments.GetArgument(argumentName)][variableName];
+            return Environments[ctx.Arguments.GetArgument(argumentName)][variableName];
         }
 
         [CakeMethodAlias]
-        public static T ReleaseVariable<T>(this ICakeContext ctx, string variableName) where T : IConvertible
+        public static T ReleaseVariable<T>(this ICakeContext ctx, string variableName)
+            where T : IConvertible
         {
             var value = ctx.ReleaseVariable(variableName);
 
@@ -75,17 +86,17 @@ namespace Cake.Deploy.Variables
                 throw new InvalidOperationException($"Requested value '{enumValue}' was not found.");
             }
 
-            return (T) Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
+            return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
         }
 
         public static bool Exists(string name)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return environments.ContainsKey(name);
+            return Environments.ContainsKey(name);
         }
 
         public static VariableCollection GetEnvironment(string name)
@@ -95,12 +106,12 @@ namespace Cake.Deploy.Variables
                 throw new InvalidOperationException($"ReleaseEnvironment with the given name does not exist: {name}");
             }
 
-            return environments[name];
+            return Environments[name];
         }
 
         public static void Clear()
         {
-            environments.Clear();
+            Environments.Clear();
         }
 
         public static void Clear(string name)
@@ -110,7 +121,7 @@ namespace Cake.Deploy.Variables
                 throw new InvalidOperationException($"ReleaseEnvironment with the given name does not exist: {name}");
             }
 
-            environments.Remove(name);
+            Environments.Remove(name);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class Decimal : ReleaseVariableByGenericTypeTests<decimal>
+    public class ReleaseVariableDecimalTests : ReleaseVariableGenericBaseTests<decimal>
     {
         [Theory]
         [InlineData("3.14", 3.14)]
