@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class Int64 : ReleaseVariableByGenericTypeTests<long>
+    public class ReleaseVariableInt64Tests : ReleaseVariableGenericBaseTests<long>
     {
         [Theory]
         [InlineData("-2147483647", -2147483647)]

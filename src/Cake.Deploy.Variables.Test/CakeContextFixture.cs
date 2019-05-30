@@ -57,14 +57,18 @@
 
         public ICakeConfiguration Configuration { get; set; }
 
-        public ICakeContext GetContext()
-        {
-            return this.Context;
-        }
-
         public void Dispose()
         {
-            VariableManager.Clear(this.CurrentEnvironment);
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                VariableManager.Clear(this.CurrentEnvironment);
+            }
         }
     }
 }

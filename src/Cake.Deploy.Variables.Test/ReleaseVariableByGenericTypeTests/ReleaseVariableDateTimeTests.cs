@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using Xunit;
 
-    public class DateTime : ReleaseVariableByGenericTypeTests<System.DateTime>
+    public class ReleaseVariableDateTimeTests : ReleaseVariableGenericBaseTests<System.DateTime>
     {
         public static IEnumerable<object[]> DateTimeSuccessTestData => new List<object[]>
         {

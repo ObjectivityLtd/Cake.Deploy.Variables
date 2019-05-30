@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class Char : ReleaseVariableByGenericTypeTests<char>
+    public class ReleaseVariableCharTests : ReleaseVariableGenericBaseTests<char>
     {
         [Theory]
         [InlineData("f", 'f')]

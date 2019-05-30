@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class String : ReleaseVariableByGenericTypeTests<string>
+    public class ReleaseVariableStringTests : ReleaseVariableGenericBaseTests<string>
     {
         [Theory]
         [InlineData("ABCDEFG", "ABCDEFG")]

@@ -2,11 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using Xunit;
 
     public class AddinTests : IDisposable
     {
-        private readonly string currentEnvironment = Guid.NewGuid().ToString("N");
+        private readonly string currentEnvironment = Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
         private readonly CakeContextFixture fixture;
 
         public AddinTests()
@@ -18,7 +19,7 @@
         public void When_VariableDefinedInCurrentEnvironment_Should_ReturnItsValue()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var variableName = "simpleVariable";
             var variableValue = "simpleVariableValue";
@@ -35,7 +36,7 @@
         public void When_VariableReferencesOtherVariableInCurrentEnvironment_Should_ReturnOtherVariableValue()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var baseVariable = "referencedVariable";
             var baseVariableValue = "defaultValue";
@@ -55,7 +56,7 @@
         public void When_VariableDefinedOnlyInBaseEnvironment_Should_ReturnVariableValueFromTheBaseEnvironment()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var baseVariable = "baseVariable";
             var baseVariableValue = "defaultValue";
@@ -75,7 +76,7 @@
         public void When_VariableDefinedInCurrentEnvironmentButNotInBaseEnv_Should_ReturnVariableValue()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var variableName = "simpleVariable";
             var variableValue = "simpleValue";
@@ -95,7 +96,7 @@
         public void When_VariableDefinedInCurrentEnvironmentReferencesVariableInBaseEnv_Should_ReturnBaseVariableValue()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var baseVariable = "referencedVariable";
             var baseVariableValue = "defaultValue";
@@ -118,7 +119,7 @@
         public void When_VariableNotDefined_Should_ThrowAnException()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var variableName = "testVariable";
 
@@ -136,7 +137,7 @@
         public void When_VariableDefinedInBaseEnvReferenceOtherVariableOverridenInCurrentEnvironment_Should_ReturnValueFromCurrentEnvironment()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var referencedVariableName = "envName";
             var baseReferencedValue = "default";
@@ -162,7 +163,7 @@
         public void When_VariableDefinedInBaseEnvReferenceTwoVariables_Should_Return_ConcatOfBaseValueAndCurrentValue()
         {
             // arrange
-            var context = this.fixture.GetContext();
+            var context = this.fixture.Context;
 
             var referencedVariableName1 = "var1";
             var baseReferencedValue1 = "default1";
@@ -189,7 +190,16 @@
 
         public void Dispose()
         {
-            this.fixture.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.fixture.Dispose();
+            }
         }
     }
 }

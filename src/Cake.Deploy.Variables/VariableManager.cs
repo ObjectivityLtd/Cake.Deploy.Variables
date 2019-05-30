@@ -30,6 +30,11 @@ namespace Cake.Deploy.Variables
         [CakeMethodAlias]
         public static VariableCollection ReleaseVariable(this ICakeContext ctx)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException(nameof(ctx));
+            }
+
             const string argumentName = "env";
 
             if (!ctx.Arguments.HasArgument(argumentName))
@@ -43,6 +48,11 @@ namespace Cake.Deploy.Variables
         [CakeMethodAlias]
         public static string ReleaseVariable(this ICakeContext ctx, string variableName)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException(nameof(ctx));
+            }
+
             const string argumentName = "env";
 
             if (!ctx.Arguments.HasArgument(argumentName))

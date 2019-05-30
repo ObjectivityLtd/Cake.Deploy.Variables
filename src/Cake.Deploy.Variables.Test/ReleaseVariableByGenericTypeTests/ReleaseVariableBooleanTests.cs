@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class Boolean : ReleaseVariableByGenericTypeTests<bool>
+    public class ReleaseVariableBooleanTests : ReleaseVariableGenericBaseTests<bool>
     {
         [Theory]
         [InlineData("true", true)]

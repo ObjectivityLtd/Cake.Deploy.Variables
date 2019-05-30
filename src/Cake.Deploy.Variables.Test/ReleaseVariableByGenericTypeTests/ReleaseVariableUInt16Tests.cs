@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class UInt16 : ReleaseVariableByGenericTypeTests<ushort>
+    public class ReleaseVariableUInt16Tests : ReleaseVariableGenericBaseTests<ushort>
     {
         [Theory]
         [InlineData("5000", 5000)]

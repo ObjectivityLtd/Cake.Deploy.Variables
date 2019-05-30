@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "This is an appropriate type name as it keeps collection of variables.")]
     public class VariableCollection
     {
         private readonly Dictionary<string, Func<VariableCollection, string>> variables = new Dictionary<string, Func<VariableCollection, string>>();
@@ -28,7 +30,7 @@
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(nameof(name));
+                throw new ArgumentException("Variable name cannot be null or whitespace.", nameof(name));
             }
 
             if (value == null)
@@ -50,7 +52,7 @@
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(nameof(name));
+                throw new ArgumentException("Variable name cannot be null or whitespace.", nameof(name));
             }
 
             if (expression == null)

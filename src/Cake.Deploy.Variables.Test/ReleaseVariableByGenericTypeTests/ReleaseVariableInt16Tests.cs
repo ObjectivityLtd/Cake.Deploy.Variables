@@ -2,7 +2,7 @@
 {
     using Xunit;
 
-    public class Int16 : ReleaseVariableByGenericTypeTests<short>
+    public class ReleaseVariableInt16Tests : ReleaseVariableGenericBaseTests<short>
     {
         [Theory]
         [InlineData("-100", -100)]
