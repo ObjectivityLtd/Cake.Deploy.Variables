@@ -8,12 +8,12 @@
         [InlineData("f", 'f')]
         [InlineData("9", '9')]
         public override void AssertSuccess(string variableValue, char expectedValue)
-            => this.AssertSuccess(variableValue, expectedValue);
+            => base.AssertSuccess(variableValue, expectedValue);
 
         [Theory]
         [InlineData("", "String must be exactly one character long.")]
         [InlineData("someLongValue", "String must be exactly one character long.")]
         public override void AssertFailure(string variableValue, string expectedErrorMessage)
-            => this.AssertFailure(variableValue, expectedErrorMessage);
+            => base.AssertFailure(variableValue, expectedErrorMessage);
     }
 }
