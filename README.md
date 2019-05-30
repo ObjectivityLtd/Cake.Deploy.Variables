@@ -1,5 +1,7 @@
 # Cake.Deploy.Variables
 
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/ObjectivityLtd/Cake.Deploy.Variables?branch=master&svg=true)](https://ci.appveyor.com/project/ObjectivityAdminsTeam/cake-deploy-variables) [![Tests Status](https://img.shields.io/appveyor/tests/ObjectivityAdminsTeam/cake-deploy-variables/master.svg)](https://ci.appveyor.com/project/ObjectivityAdminsTeam/cake-deploy-variables) [![codecov](https://codecov.io/gh/ObjectivityLtd/Cake.Deploy.Variables/branch/master/graph/badge.svg)](https://codecov.io/gh/ObjectivityLtd/Cake.Deploy.Variables) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+
 This is an extension for Cake framework. It allows using so called ReleaseVariables. Release variables are values which required during deployment and may deffer among environments e.g. server address, port number.
 
 ## How to add Cake.Deploy.Variables
